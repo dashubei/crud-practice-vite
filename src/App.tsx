@@ -42,7 +42,6 @@ const App = () => {
 
   const handleInComplete = async (id: number, title: string) => {
     const confirm = window.confirm("未完了にしますか？");
-    console.log(confirm);
     if (!confirm) return;
 
     try {
@@ -60,7 +59,17 @@ const App = () => {
       console.error(error);
     }
   };
-  const handleDelete = () => {};
+
+  const handleDelete = async (id: number) => {
+    const confirm = window.confirm("削除しますか？");
+    if (!confirm) return;
+    try {
+      const response = await ky.delete(`${API_URL}/todos/${id}`).json<Todo[]>();
+      setTodos(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (inputVal === "") return;
@@ -98,7 +107,7 @@ const App = () => {
             >
               {item.completed ? "未完了" : "完了"}
             </button>
-            <button type="button" onClick={handleDelete}>
+            <button type="button" onClick={() => handleDelete(item.id)}>
               削除
             </button>
           </li>
