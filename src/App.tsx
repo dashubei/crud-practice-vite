@@ -5,6 +5,7 @@ import { getTodo } from "./utils/api/getTodo";
 import { completedToggle } from "./utils/api/completedToggle";
 import { executeDelete } from "./utils/api/executeDelete";
 import { postTodo } from "./utils/api/postTodo";
+import Button from "./components/ui/button/button";
 
 // やりたいこと
 // react-hook-form
@@ -114,7 +115,7 @@ const App = () => {
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
             />
-            <input type="submit" value="追加" />
+            <Button text="追加" className="button is-primary" type="submit" />
           </form>
         </div>
       )}
