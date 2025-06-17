@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { API_URL } from "./utils/const";
 import type { Todo } from "./types/todo";
-import ky from "ky";
 import Loading from "./components/loading/loading";
+import { getTodo } from "./utils/api/getTodo";
+import { completedToggle } from "./utils/api/completedToggle";
+import { executeDelete } from "./utils/api/executeDelete";
+import { postTodo } from "./utils/api/postTodo";
 
 // やりたいこと
 // react-hook-form
@@ -18,9 +20,10 @@ const App = () => {
     const init = async () => {
       setIsLoading(true);
       try {
-        const response = await ky.get(`${API_URL}/todos`).json<Todo[]>();
+        const response = await getTodo();
         setTodos(response);
       } catch (error) {
+        alert(`もう一度読み込み直してください\n${error}`);
         console.error(error);
       } finally {
         setIsLoading(false);
@@ -30,26 +33,17 @@ const App = () => {
   }, []);
 
   // 完了・未完了
-  const handleDone = async (id: number, title: string) => {
+  const handleCompleted = async (id: number, title: string) => {
     setIsLoading(true);
 
+    const isCompleted = todos[id - 1].completed;
     try {
-      const response = await ky
-        .put(`${API_URL}/todos/${id}`, {
-          json: {
-            id,
-            title,
-            completed: !todos[id - 1].completed,
-          },
-        })
-        .json<Todo[]>();
-
+      await completedToggle(id, title, isCompleted);
       setTodos((prev) =>
         prev.map((item) =>
           item.id === id ? { ...item, completed: !item.completed } : item
         )
       );
-      setTodos(response);
     } catch (error) {
       console.error(error);
     } finally {
@@ -60,7 +54,7 @@ const App = () => {
   const handleDelete = async (id: number) => {
     setIsLoading(true);
     try {
-      await ky.delete(`${API_URL}/todos/${id}`).json<Todo[]>();
+      await executeDelete(id);
       setTodos((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error(error);
@@ -75,16 +69,7 @@ const App = () => {
 
     setIsLoading(true);
     try {
-      await ky
-        .post(`${API_URL}/todos`, {
-          json: {
-            id: todos.length + 1,
-            title: inputVal,
-            completed: false,
-          },
-        })
-        .json<Todo[]>();
-
+      await postTodo(todos.length + 1, inputVal);
       setTodos((prev) => [
         ...prev,
         { id: todos.length + 1, title: inputVal, completed: false },
@@ -113,7 +98,7 @@ const App = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => handleDone(item.id, item.title)}
+                  onClick={() => handleCompleted(item.id, item.title)}
                 >
                   {item.completed ? "未完了" : "完了"}
                 </button>
