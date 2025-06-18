@@ -6,6 +6,8 @@ import { completedToggle } from "./utils/api/completedToggle";
 import { executeDelete } from "./utils/api/executeDelete";
 import { postTodo } from "./utils/api/postTodo";
 import Button from "./components/ui/button/button";
+import FieldWrapper from "./components/ui/form/field-wrapper";
+import Input from "./components/ui/form/input";
 
 // やりたいこと
 // react-hook-form
@@ -115,6 +117,9 @@ const App = () => {
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
             />
+            <FieldWrapper label="TODO">
+              <Input type="text" error={undefined} />
+            </FieldWrapper>
             <Button text="追加" className="button is-primary" type="submit" />
           </form>
         </div>
