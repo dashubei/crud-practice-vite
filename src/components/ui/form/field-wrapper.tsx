@@ -15,7 +15,7 @@ const FieldWrapper = ({
 }: FieldWrapperProps): React.JSX.Element => {
   return (
     <>
-      <label>
+      <label className="is-flex is-align-items-center ">
         {label}
         <div>{children}</div>
       </label>

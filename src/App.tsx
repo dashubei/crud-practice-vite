@@ -93,32 +93,37 @@ const App = () => {
         <div>
           <ul>
             {todos.map((item) => (
-              <li key={item.id}>
+              <li className="is-flex is-align-items-center" key={item.id}>
                 {item.completed ? (
                   <s>{item.title}</s>
                 ) : (
                   <span>{item.title}</span>
                 )}
-                <button
+                <Button
+                  className="button is-success"
                   type="button"
                   onClick={() => handleCompleted(item.id, item.title)}
-                >
-                  {item.completed ? "未完了" : "完了"}
-                </button>
-                <button type="button" onClick={() => handleDelete(item.id)}>
-                  削除
-                </button>
+                  text={item.completed ? "未完了" : "完了"}
+                />
+                <Button
+                  className="button is-danger"
+                  type="button"
+                  onClick={() => handleDelete(item.id)}
+                  text="削除"
+                />
               </li>
             ))}
           </ul>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={inputVal}
-              onChange={(e) => setInputVal(e.target.value)}
-            />
+          <form
+            className="is-flex is-align-items-center"
+            onSubmit={handleSubmit}
+          >
             <FieldWrapper label="TODO">
-              <Input type="text" error={undefined} />
+              <Input
+                onChange={(e) => setInputVal(e.target.value)}
+                type="text"
+                error={undefined}
+              />
             </FieldWrapper>
             <Button text="追加" className="button is-primary" type="submit" />
           </form>
